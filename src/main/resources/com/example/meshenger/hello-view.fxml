@@ -8,17 +8,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="317.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="608.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="300.0" layoutY="280.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Отправить" />
-      <CheckBox layoutX="388.0" layoutY="284.0" mnemonicParsing="false" text="Всем" />
-      <TextArea layoutX="14.0" layoutY="30.0" prefHeight="240.0" prefWidth="362.0" />
+      <Button fx:id="sendButton" layoutX="385.0" layoutY="281.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="78.0" text="Отправить" />
+      <CheckBox fx:id="broadcastCheckBox" layoutX="325.0" layoutY="312.0" mnemonicParsing="false" text="Всем" />
+      <TextArea fx:id="newMessagesArea" layoutX="14.0" layoutY="30.0" prefHeight="240.0" prefWidth="362.0" />
       <Label layoutX="14.0" layoutY="6.0" text="Новые сообщения" />
       <Label layoutX="386.0" layoutY="6.0" text="Подключение" />
-      <TextArea layoutX="386.0" layoutY="30.0" prefHeight="96.0" prefWidth="200.0" />
+      <TextArea fx:id="connectionInfoArea" layoutX="386.0" layoutY="30.0" prefHeight="96.0" prefWidth="210.0" />
       <Label layoutX="386.0" layoutY="130.0" text="Узлы" />
-      <TextArea layoutX="386.0" layoutY="153.0" prefHeight="118.0" prefWidth="200.0" />
-      <TextField layoutX="13.0" layoutY="279.0" prefHeight="26.0" prefWidth="283.0" />
-      <Button layoutX="458.0" layoutY="280.0" mnemonicParsing="false" text="Остановить и выйти" />
+      <TextArea fx:id="nodesArea" layoutX="386.0" layoutY="153.0" prefHeight="116.0" prefWidth="210.0" />
+      <TextField fx:id="messageField" layoutX="13.0" layoutY="279.0" prefHeight="26.0" prefWidth="362.0" promptText="Введите сообщение" />
+      <Button fx:id="stopButton" layoutX="468.0" layoutY="308.0" mnemonicParsing="false" text="Остановить и выйти" />
+      <TextField fx:id="targetField" layoutX="14.0" layoutY="308.0" prefHeight="26.0" prefWidth="303.0" promptText="Кому" />
    </children>
 </AnchorPane>

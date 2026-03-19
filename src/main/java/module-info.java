@@ -1,8 +1,14 @@
-module com.example.meshenger {
+module mesh.javafx {
     requires javafx.controls;
     requires javafx.fxml;
 
+    opens mesh to javafx.fxml;
+    opens mesh.controllers to javafx.fxml;
 
-    opens com.example.meshenger to javafx.fxml;
-    exports com.example.meshenger;
+    exports mesh;
+    exports mesh.controllers;
+    exports mesh.core;
+    exports mesh.models;
+    exports mesh.services;
+    exports mesh.utils;
 }
