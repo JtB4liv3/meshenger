@@ -47,17 +47,24 @@ public class MeshNode {
 
         running = true;
 
-        // Планировщик для обновления статистики
+        // Планировщик для периодических задач
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this::cleanupStaleNeighbors, 10, 10, TimeUnit.SECONDS);
+
+        // Очистка старых соседей каждые 15 секунд
+        scheduler.scheduleAtFixedRate(() -> {
+            routingTable.cleanupStaleNeighbors(20000); // 20 секунд таймаут
+        }, 15, 15, TimeUnit.SECONDS);
+
+        // Проверка потерянных узлов каждые 10 секунд
+        scheduler.scheduleAtFixedRate(() -> {
+            if (discoveryService != null) {
+                discoveryService.checkLostNeighbors(routingTable.getActiveNeighborIds());
+            }
+        }, 10, 10, TimeUnit.SECONDS);
 
         if (uiUpdater != null) {
             uiUpdater.onNodeStarted(nodeId);
         }
-    }
-
-    private void cleanupStaleNeighbors() {
-        routingTable.cleanupStaleNeighbors(20000); // 20 секунд таймаут
     }
 
     public void sendMessage(String targetId, String text) {
@@ -89,13 +96,23 @@ public class MeshNode {
     // Методы для обратного вызова из сервисов
 
     public void onNewNeighbor(NodeInfo neighbor) {
-        routingTable.updateNeighbor(neighbor);
-        if (uiUpdater != null) {
-            uiUpdater.onNewNeighbor(neighbor);
+        // Проверяем, действительно ли это новый сосед
+        if (!routingTable.hasNeighbor(neighbor.getNodeId())) {
+            routingTable.updateNeighbor(neighbor);
+            if (uiUpdater != null) {
+                uiUpdater.onNewNeighbor(neighbor);
+            }
+        } else {
+            // Просто обновляем время последнего контакта
+            routingTable.updateNeighbor(neighbor);
         }
     }
 
     public void onNeighborLost(String nodeId) {
+        // Удаляем из таблицы маршрутизации
+        routingTable.removeNeighbor(nodeId);
+
+        // Уведомляем UI
         if (uiUpdater != null) {
             uiUpdater.onNeighborLost(nodeId);
         }

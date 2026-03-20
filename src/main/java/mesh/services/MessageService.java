@@ -5,6 +5,7 @@ import mesh.core.NodeInfo;
 import mesh.core.RoutingTable;
 import mesh.models.MeshMessage;
 import mesh.models.MessageType;
+import mesh.utils.NetworkUtils;
 
 import java.io.*;
 import java.net.*;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageService {
     private static final int MESSAGE_PORT = 8889;
+    private static final int DISCOVERY_PORT = 8888; // Для совместимости
     private static final int MAX_RETRIES = 2;
     private static final int ACK_TIMEOUT = 2000;
 
@@ -67,7 +69,7 @@ public class MessageService {
     }
 
     private void handleIncomingMessage(MeshMessage message, InetAddress fromAddress) {
-        // Дедупликация
+        // Дедупликация - предотвращаем зацикливание
         if (processedMessages.contains(message.getMessageId())) {
             return;
         }
@@ -86,6 +88,17 @@ public class MessageService {
             return;
         }
 
+        // ВАЖНО: Всегда добавляем информацию об отправителе в таблицу маршрутизации
+        // Это нужно, чтобы узлы узнавали друг о друге через пересылаемые сообщения
+        NodeInfo senderNode = new NodeInfo(
+                message.getSenderId(),
+                fromAddress,
+                DISCOVERY_PORT
+        );
+
+        // Уведомляем meshNode о новом узле (если его еще нет)
+        meshNode.onNewNeighbor(senderNode);
+
         // Проверяем, нам ли сообщение
         boolean isForUs = message.getTargetId().equals(meshNode.getNodeId()) ||
                 message.getType() == MessageType.BROADCAST;
@@ -99,8 +112,11 @@ public class MessageService {
             sendAck(message.getMessageId(), fromAddress);
         }
 
-        // Пересылаем дальше
-        forwardMessage(message, fromAddress);
+        // ВАЖНО: Пересылаем ВСЕГДА, кроме случая, когда это ACK
+        // Даже если сообщение для нас, другие узлы тоже должны его получить
+        if (message.getType() != MessageType.ACK) {
+            forwardMessage(message, fromAddress);
+        }
     }
 
     private void sendAck(String messageId, InetAddress toAddress) {
@@ -131,6 +147,7 @@ public class MessageService {
     private void forwardMessage(MeshMessage message, InetAddress fromAddress) {
         for (NodeInfo neighbor : routingTable.getAllNeighbors()) {
             try {
+                // Не отправляем обратно отправителю
                 if (neighbor.getAddress().equals(fromAddress)) {
                     continue;
                 }
@@ -223,6 +240,7 @@ public class MessageService {
 
         processedMessages.add(message.getMessageId());
 
+        // Для broadcast не ждем подтверждения, просто рассылаем
         for (NodeInfo neighbor : routingTable.getAllNeighbors()) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();

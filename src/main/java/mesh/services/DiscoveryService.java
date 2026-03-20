@@ -9,6 +9,8 @@ import mesh.utils.NetworkUtils;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DiscoveryService {
     private static final int DISCOVERY_PORT = 8888;
@@ -18,6 +20,9 @@ public class DiscoveryService {
     private final RoutingTable routingTable;
     private DatagramSocket socket;
     private boolean running;
+
+    // Множество для отслеживания известных узлов
+    private final Set<String> knownNodes = new HashSet<>();
 
     public DiscoveryService(MeshNode meshNode, RoutingTable routingTable) {
         this.meshNode = meshNode;
@@ -31,10 +36,7 @@ public class DiscoveryService {
 
         running = true;
 
-        // Поток для прослушивания
         new Thread(this::listenForDiscoveries).start();
-
-        // Поток для рассылки объявлений
         new Thread(this::announcePresence).start();
     }
 
@@ -46,7 +48,6 @@ public class DiscoveryService {
             try {
                 socket.receive(packet);
 
-                // Игнорируем свои сообщения
                 if (packet.getAddress().getHostAddress().equals(NetworkUtils.getLocalIpAddress())) {
                     continue;
                 }
@@ -60,7 +61,7 @@ public class DiscoveryService {
             } catch (SocketException e) {
                 if (running) break;
             } catch (Exception e) {
-                // Игнорируем ошибки десериализации
+                // Игнорируем
             }
         }
     }
@@ -72,12 +73,19 @@ public class DiscoveryService {
                 break;
 
             case DISCOVERY_REPLY:
-                NodeInfo newNode = new NodeInfo(
-                        message.getSenderId(),
-                        address,
-                        DISCOVERY_PORT
-                );
-                meshNode.onNewNeighbor(newNode);
+                // Проверяем, новый ли это узел
+                if (!knownNodes.contains(message.getSenderId())) {
+                    knownNodes.add(message.getSenderId());
+
+                    NodeInfo newNode = new NodeInfo(
+                            message.getSenderId(),
+                            address,
+                            DISCOVERY_PORT
+                    );
+
+                    // Уведомляем только о НОВОМ узле
+                    meshNode.onNewNeighbor(newNode);
+                }
                 break;
         }
     }
@@ -103,7 +111,7 @@ public class DiscoveryService {
                 );
                 socket.send(packet);
 
-                Thread.sleep(5000); // Каждые 5 секунд
+                Thread.sleep(5000);
 
             } catch (Exception e) {
                 if (running) break;
@@ -133,6 +141,19 @@ public class DiscoveryService {
 
         } catch (Exception e) {
             // Игнорируем
+        }
+    }
+
+    // Метод для очистки отключившихся узлов
+    public void checkLostNeighbors(Set<String> activeNeighbors) {
+        // Находим узлы, которые были в knownNodes, но пропали из activeNeighbors
+        Set<String> lostNodes = new HashSet<>(knownNodes);
+        lostNodes.removeAll(activeNeighbors);
+        lostNodes.remove(meshNode.getNodeId()); // Убираем себя
+
+        for (String lostNodeId : lostNodes) {
+            knownNodes.remove(lostNodeId);
+            meshNode.onNeighborLost(lostNodeId);
         }
     }
 
