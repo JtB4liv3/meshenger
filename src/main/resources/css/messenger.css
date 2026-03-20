@@ -1,0 +1,198 @@
+/* messenger.css - Soft Gray Borders Theme */
+
+.root {
+    -fx-background-color: #151517;
+    -fx-font-family: 'Segoe UI', 'Roboto', 'System', sans-serif;
+}
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* TextArea с мягкими серыми границами */
+.text-area {
+    -fx-background-color: #2c2c2e;
+    -fx-background-radius: 0px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-family: 'Segoe UI', 'Roboto', 'System', monospace;
+}
+
+.text-area .content {
+    -fx-background-color: #2c2c2e;
+}
+
+.text-area:focused {
+    -fx-background-color: #333333;
+}
+
+.text-field {
+    -fx-background-color: #2c2c2e;
+    -fx-background-radius: 0px;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+/* Кнопки с мягкими границами */
+.button {
+    -fx-background-color: #5686fe;
+    -fx-text-fill: #333333;
+    -fx-font-size: 13px;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+    -fx-cursor: hand;
+    -fx-border-color: #e5e5e5;
+    -fx-border-width: 1px;
+}
+
+.button:hover {
+    -fx-background-color: #e8e8e8;
+    -fx-border-color: #c0c0c0;
+}
+
+.button:pressed {
+    -fx-background-color: #3c5081;
+}
+
+#sendButton {
+    -fx-background-color: #5686fe;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #2d2d2d;
+    -fx-border-width: 1px;
+}
+
+#sendButton:hover {
+     -fx-background-color: #3c5081;
+     -fx-text-fill: white;
+     -fx-font-weight: bold;
+     -fx-border-color: #2d2d2d;
+     -fx-border-width: 2px;
+}
+
+#stopButton {
+    -fx-background-color: #5686fe;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #2d2d2d;
+    -fx-border-width: 1px;
+}
+
+#stopButton:hover {
+     -fx-background-color: #3c5081;
+     -fx-text-fill: white;
+     -fx-font-weight: bold;
+     -fx-border-color: #2d2d2d;
+     -fx-border-width: 2px;
+}
+
+/* CheckBox с серыми границами */
+.check-box {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+.check-box .box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d0d0d0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #2f3235;
+    -fx-border-color: #d0d0d0;
+}
+
+/* Scrollbar */
+.scroll-bar {
+    -fx-background-color: #fafafa;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #d0d0d0;
+    -fx-background-radius: 0px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #b0b0b0;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Tooltip */
+.tooltip {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-font-size: 11px;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+    -fx-padding: 5px 8px;
+    -fx-border-color: #e5e5e5;
+    -fx-border-width: 1px;
+}
+
+/* Стили для областей */
+#newMessagesArea,
+#connectionInfoArea,
+#nodesArea,
+#messageField,
+#targetField {
+    -fx-border-color: #e5e5e5;
+    -fx-border-width: 1px;
+}
+
+/* При фокусе */
+#newMessagesArea:focused,
+#connectionInfoArea:focused,
+#nodesArea:focused,
+#messageField:focused,
+#targetField:focused {
+    -fx-border-color: #b0b0b0;
+    -fx-border-width: 2px;
+}
+
+/* Стили для JFXDecorator - меняем цвет верхней панели */
+.jfx-decorator {
+    -fx-decorator-color: #5686fe;  /* Твой синий цвет */
+}
+
+/* Текст заголовка */
+.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
+    -fx-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Контейнер с кнопками */
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: #5686fe;
+}
+
+/* Кнопки управления */
+.jfx-decorator .jfx-decorator-buttons-container .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Кнопки при наведении */
+.jfx-decorator .jfx-decorator-buttons-container .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Кнопка закрытия при наведении (красная) */
+.jfx-decorator .jfx-decorator-buttons-container .button.close-button:hover {
+    -fx-background-color: #e81123;
+}
+
+/* Рамка вокруг окна */
+.jfx-decorator .resize-border {
+    -fx-border-color: #5686fe;
+    -fx-border-width: 1px;
+}
