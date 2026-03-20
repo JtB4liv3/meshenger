@@ -156,43 +156,56 @@
     -fx-border-color: #b0b0b0;
     -fx-border-width: 2px;
 }
-
-/* Стили для JFXDecorator - меняем цвет верхней панели */
-.jfx-decorator {
-    -fx-decorator-color: #5686fe;  /* Твой синий цвет */
+/* Кастомный заголовок как в Firefox */
+.custom-titlebar {
+    -fx-background-color: #2c2c2c;
+    -fx-padding: 0 8px;
+    -fx-cursor: hand;
 }
 
-/* Текст заголовка */
-.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
-    -fx-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
+/* Иконка приложения */
+.app-icon {
+    -fx-text-fill: #e1e3e6;
+    -fx-font-size: 16px;
+    -fx-padding: 0 5px 0 0;
 }
 
-/* Контейнер с кнопками */
-.jfx-decorator .jfx-decorator-buttons-container {
-    -fx-background-color: #5686fe;
+/* Заголовок окна */
+.window-title {
+    -fx-text-fill: #e1e3e6;
+    -fx-font-weight: normal;
+    -fx-font-size: 13px;
+    -fx-font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
 /* Кнопки управления */
-.jfx-decorator .jfx-decorator-buttons-container .button {
+.window-button {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
+    -fx-text-fill: #e1e3e6;
+    -fx-font-family: 'Segoe UI', 'Arial', sans-serif;
     -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-padding: 4px 12px;
+    -fx-cursor: hand;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
 }
 
-/* Кнопки при наведении */
-.jfx-decorator .jfx-decorator-buttons-container .button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
+/* Кнопка свернуть */
+.window-button:first-of-type {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
 }
 
-/* Кнопка закрытия при наведении (красная) */
-.jfx-decorator .jfx-decorator-buttons-container .button.close-button:hover {
+/* Кнопка закрыть */
+.window-button:last-child {
+    -fx-font-size: 16px;
+}
+
+.window-button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.window-button:last-child:hover {
     -fx-background-color: #e81123;
-}
-
-/* Рамка вокруг окна */
-.jfx-decorator .resize-border {
-    -fx-border-color: #5686fe;
-    -fx-border-width: 1px;
 }
