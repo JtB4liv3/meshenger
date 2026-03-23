@@ -6,21 +6,41 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.text.Font?>
 
-<!-- Убрали xmlns:fx="http://javafx.com/fxml/21" и оставили только базовый -->
+<VBox spacing="0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mesh.controllers.MainController">
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="491.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mesh.controllers.MainController">
-    <children>
-        <Button fx:id="sendButton" layoutX="379.0" layoutY="438.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="97.0" text="Отправить" />
-        <CheckBox fx:id="broadcastCheckBox" layoutX="314.0" layoutY="470.0" mnemonicParsing="false" text="Всем" />
-        <TextArea fx:id="newMessagesArea" layoutX="13.0" layoutY="154.0" prefHeight="274.0" prefWidth="464.0" />
-        <Label layoutX="13.0" layoutY="132.0" text="Новые сообщения" />
-        <Label layoutX="14.0" layoutY="14.0" text="Подключение" />
-        <TextArea fx:id="connectionInfoArea" layoutX="14.0" layoutY="35.0" prefHeight="89.0" prefWidth="230.0" />
-        <Label layoutX="249.0" layoutY="14.0" text="Узлы" />
-        <TextArea fx:id="nodesArea" layoutX="249.0" layoutY="34.0" prefHeight="90.0" prefWidth="230.0" />
-        <TextField fx:id="messageField" layoutX="14.0" layoutY="438.0" prefHeight="26.0" prefWidth="362.0" promptText="Введите сообщение" />
-        <Button fx:id="stopButton" layoutX="378.0" layoutY="466.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Выход" />
-        <TextField fx:id="targetField" layoutX="14.0" layoutY="466.0" prefHeight="26.0" prefWidth="289.0" promptText="Кому" />
-    </children>
-</AnchorPane>
+    <!-- Кастомный заголовок как в Firefox -->
+    <HBox fx:id="titleBar" styleClass="custom-titlebar" alignment="CENTER_LEFT" spacing="5" prefHeight="32">
+        <!-- Иконка приложения (опционально) -->
+
+        <Label styleClass="window-title" text="Meshenger" />
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <!-- Кнопки управления только с иконками -->
+        <Button fx:id="minimizeBtn" styleClass="window-button" text="➖" />
+        <Button fx:id="closeBtn" styleClass="window-button" text="❌" />
+    </HBox>
+
+    <!-- Основной контент -->
+    <AnchorPane prefHeight="420.0" prefWidth="711.0" stylesheets="@../css/messenger.css" VBox.vgrow="ALWAYS">
+        <children>
+            <Button fx:id="sendButton" layoutX="464.0" layoutY="321.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="236.0" text="Отправить" />
+            <CheckBox fx:id="broadcastCheckBox" layoutX="465.0" layoutY="372.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="90.0" text="Всем" />
+            <TextArea fx:id="newMessagesArea" editable="false" layoutX="14.0" layoutY="23.0" prefHeight="281.0" prefWidth="428.0" />
+            <Label layoutX="465.0" layoutY="5.0" text="Подключение" />
+            <TextArea fx:id="connectionInfoArea" editable="false" layoutX="464.0" layoutY="23.0" prefHeight="102.0" prefWidth="236.0" />
+            <Label layoutX="464.0" layoutY="125.0" text="Узлы" />
+            <TextArea fx:id="nodesArea" editable="false" layoutX="464.0" layoutY="144.0" prefHeight="160.0" prefWidth="236.0" />
+            <TextField fx:id="messageField" layoutX="14.0" layoutY="321.0" prefHeight="39.0" prefWidth="428.0" promptText="Введите сообщение" />
+            <Button fx:id="stopButton" layoutX="535.0" layoutY="374.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="162.0" text="Выход" />
+            <TextField fx:id="targetField" layoutX="14.0" layoutY="374.0" prefHeight="35.0" prefWidth="428.0" promptText="Кому" />
+            <Label layoutX="14.0" layoutY="5.0" prefHeight="18.0" prefWidth="150.0" text="Чат" />
+        </children>
+    </AnchorPane>
+
+</VBox>

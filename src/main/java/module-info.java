@@ -1,6 +1,7 @@
 module mesh.javafx {
     requires javafx.controls;
     requires javafx.fxml;
+    requires MaterialFX;
 
     opens mesh to javafx.fxml;
     opens mesh.controllers to javafx.fxml;

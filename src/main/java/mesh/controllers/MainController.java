@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import mesh.core.MeshNode;
 import mesh.core.NodeInfo;
 import mesh.utils.NetworkUtils;
@@ -15,59 +17,90 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable, MeshNode.UIUpdater {
 
-    @FXML private TextArea newMessagesArea;      // Большое окно для сообщений
-    @FXML private TextArea connectionInfoArea;   // Окно информации о подключении
-    @FXML private TextArea nodesArea;            // Окно списка участников
-    @FXML private TextField messageField;        // Поле ввода сообщения
-    @FXML private TextField targetField;         // Поле ввода "Кому"
-    @FXML private CheckBox broadcastCheckBox;    // CheckBox "Всем"
-    @FXML private Button sendButton;             // Кнопка "Отправить"
-    @FXML private Button stopButton;             // Кнопка "Остановить и выйти"
+    @FXML private TextArea newMessagesArea;
+    @FXML private TextArea connectionInfoArea;
+    @FXML private TextArea nodesArea;
+    @FXML private TextField messageField;
+    @FXML private TextField targetField;
+    @FXML private CheckBox broadcastCheckBox;
+    @FXML private Button sendButton;
+    @FXML private Button stopButton;
+
+    // Элементы кастомного заголовка
+    @FXML private HBox titleBar;
+    @FXML private Button minimizeBtn;
+    @FXML private Button closeBtn;
 
     private MeshNode meshNode;
     private Thread meshThread;
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    // Для перетаскивания окна
+    private double dragOffsetX;
+    private double dragOffsetY;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Настройка обработчиков
         setupEventHandlers();
-
-        // Заполнение информации о подключении
+        setupWindowControls();
+        setupWindowDragging();
         updateConnectionInfo();
-
-        // Запуск mesh-узла
         startMeshNode();
     }
 
     private void setupEventHandlers() {
-        // Отправка по Enter в поле сообщения
         messageField.setOnAction(event -> handleSendMessage());
 
-        // Обработка CheckBox "Всем"
         broadcastCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 targetField.setDisable(true);
-                targetField.setPromptText("Broadcast режим");
+                targetField.setPromptText("Широковещательная рассылка");
             } else {
                 targetField.setDisable(false);
                 targetField.setPromptText("Кому (ID узла)");
             }
         });
 
-        // Кнопка отправки
         sendButton.setOnAction(event -> handleSendMessage());
-
-        // Кнопка остановки
         stopButton.setOnAction(event -> handleStopAndExit());
+    }
+
+    // Настройка кнопок управления окном (только свернуть и закрыть)
+    private void setupWindowControls() {
+        // Кнопка свернуть
+        minimizeBtn.setOnAction(e -> {
+            Stage stage = (Stage) minimizeBtn.getScene().getWindow();
+            stage.setIconified(true);
+        });
+
+        // Кнопка закрыть
+        closeBtn.setOnAction(e -> {
+            shutdown();
+            Stage stage = (Stage) closeBtn.getScene().getWindow();
+            stage.close();
+            Platform.exit();
+            System.exit(0);
+        });
+    }
+
+    // Настройка перетаскивания окна
+    private void setupWindowDragging() {
+        titleBar.setOnMousePressed(event -> {
+            dragOffsetX = event.getSceneX();
+            dragOffsetY = event.getSceneY();
+        });
+
+        titleBar.setOnMouseDragged(event -> {
+            Stage stage = (Stage) titleBar.getScene().getWindow();
+            stage.setX(event.getScreenX() - dragOffsetX);
+            stage.setY(event.getScreenY() - dragOffsetY);
+        });
     }
 
     private void updateConnectionInfo() {
         StringBuilder info = new StringBuilder();
-        info.append("=== Информация об узле ===\n");
         info.append("Статус: запуск...\n");
         info.append("Локальный IP: ").append(NetworkUtils.getLocalIpAddress()).append("\n");
-        info.append("Порт: 8888\n");
         connectionInfoArea.setText(info.toString());
     }
 
@@ -96,11 +129,9 @@ public class MainController implements Initializable, MeshNode.UIUpdater {
         }
 
         if (broadcastCheckBox.isSelected()) {
-            // Отправка всем
             meshNode.broadcastMessage(text);
             logMessage("Я -> ВСЕМ", text);
         } else {
-            // Отправка конкретному узлу
             String targetId = targetField.getText().trim();
             if (targetId.isEmpty()) {
                 showAlert("Ошибка", "Введите ID получателя или выберите 'Всем'");
@@ -111,7 +142,6 @@ public class MainController implements Initializable, MeshNode.UIUpdater {
             logMessage("Я -> " + targetId, text);
         }
 
-        // Очищаем поля ввода
         messageField.clear();
         if (!broadcastCheckBox.isSelected()) {
             targetField.clear();
@@ -131,17 +161,13 @@ public class MainController implements Initializable, MeshNode.UIUpdater {
         }
     }
 
-    // Реализация методов интерфейса UIUpdater
-
     @Override
     public void onNodeStarted(String nodeId) {
         Platform.runLater(() -> {
             String info = String.format(
-                            "Статус: АКТИВЕН\n" +
+                    "Статус: АКТИВЕН\n" +
                             "ID узла: %s\n" +
-                            "Локальный IP: %s\n" +
-                            "Порт: 8888\n" +
-                            "Режим: mesh-сеть\n",
+                            "Локальный IP: %s\n",
                     nodeId, NetworkUtils.getLocalIpAddress()
             );
             connectionInfoArea.setText(info);
@@ -189,7 +215,6 @@ public class MainController implements Initializable, MeshNode.UIUpdater {
 
         StringBuilder nodes = new StringBuilder();
         nodes.append("Текущий узел: ").append(meshNode.getNodeId()).append("\n");
-        nodes.append("──────────────────\n");
 
         if (meshNode.getNeighborCount() == 0) {
             nodes.append("Нет активных соседей\n");
@@ -210,13 +235,12 @@ public class MainController implements Initializable, MeshNode.UIUpdater {
     private void logMessage(String sender, String message) {
         String timestamp = LocalTime.now().format(timeFormatter);
         newMessagesArea.appendText(String.format("[%s] %s: %s\n", timestamp, sender, message));
-        // Автопрокрутка вниз
         newMessagesArea.setScrollTop(Double.MAX_VALUE);
     }
 
     private void logError(String message) {
         String timestamp = LocalTime.now().format(timeFormatter);
-        newMessagesArea.appendText(String.format("[%s] ⚠️ ОШИБКА: %s\n", timestamp, message));
+        newMessagesArea.appendText(String.format("[%s] ОШИБКА: %s\n", timestamp, message));
         newMessagesArea.setScrollTop(Double.MAX_VALUE);
     }
 
