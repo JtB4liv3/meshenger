@@ -7,14 +7,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
 
 <VBox spacing="0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mesh.controllers.MainController">
 
     <!-- Кастомный заголовок как в Firefox -->
-    <HBox fx:id="titleBar" styleClass="custom-titlebar" alignment="CENTER_LEFT" spacing="5" prefHeight="32">
+    <HBox fx:id="titleBar" alignment="CENTER_LEFT" prefHeight="32" spacing="5" styleClass="custom-titlebar">
         <!-- Иконка приложения (опционально) -->
 
         <Label styleClass="window-title" text="Meshenger" />
@@ -31,11 +30,11 @@
         <children>
             <Button fx:id="sendButton" layoutX="464.0" layoutY="321.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="236.0" text="Отправить" />
             <CheckBox fx:id="broadcastCheckBox" layoutX="465.0" layoutY="372.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="90.0" text="Всем" />
-            <TextArea fx:id="newMessagesArea" editable="false" layoutX="14.0" layoutY="23.0" prefHeight="281.0" prefWidth="428.0" />
+            <TextArea fx:id="newMessagesArea" editable="false" layoutX="14.0" layoutY="23.0" prefHeight="281.0" prefWidth="428.0" wrapText="true" />
             <Label layoutX="465.0" layoutY="5.0" text="Подключение" />
-            <TextArea fx:id="connectionInfoArea" editable="false" layoutX="464.0" layoutY="23.0" prefHeight="102.0" prefWidth="236.0" />
+            <TextArea fx:id="connectionInfoArea" editable="false" layoutX="464.0" layoutY="23.0" prefHeight="102.0" prefWidth="236.0" wrapText="true" />
             <Label layoutX="464.0" layoutY="125.0" text="Узлы" />
-            <TextArea fx:id="nodesArea" editable="false" layoutX="464.0" layoutY="144.0" prefHeight="160.0" prefWidth="236.0" />
+            <TextArea fx:id="nodesArea" editable="false" layoutX="464.0" layoutY="144.0" prefHeight="160.0" prefWidth="236.0" wrapText="true" />
             <TextField fx:id="messageField" layoutX="14.0" layoutY="321.0" prefHeight="39.0" prefWidth="428.0" promptText="Введите сообщение" />
             <Button fx:id="stopButton" layoutX="535.0" layoutY="374.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="162.0" text="Выход" />
             <TextField fx:id="targetField" layoutX="14.0" layoutY="374.0" prefHeight="35.0" prefWidth="428.0" promptText="Кому" />
